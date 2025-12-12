@@ -47,13 +47,6 @@ public:
     virtual const Matrix1d& inputGradients() const noexcept = 0;
 
     /**
-     * @brief Get the weights of the layer.
-     * 
-     * @return Matrix holding the weights of the layer.
-     */
-    virtual const Matrix2d& weights() const noexcept = 0;
-
-    /**
      * @brief Perform feedforward operation.
      * 
      * @param[in] input Matrix holding input data.
@@ -65,24 +58,11 @@ public:
     /**
      * @brief Perform backpropagation.
      * 
-     *        This method is appropriate for output layers only.
-     * 
      * @param[in] outputGradients Matrix holding gradients from the next layer.
      * 
      * @return True on success, false on failure.
      */
     virtual bool backpropagate(const Matrix1d& outputGradients) noexcept = 0;
-
-    /**
-     * @brief Perform backpropagation with the next layer.
-     * 
-     *        This method is appropriate for hidden layers only.
-     * 
-     * @param[in] nextLayer The next layer.
-     * 
-     * @return True on success, false on failure.
-     */
-    virtual bool backpropagate(const Interface& nextLayer) noexcept = 0;
 
     /**
      * @brief Perform optimization.

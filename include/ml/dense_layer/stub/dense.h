@@ -33,6 +33,7 @@ public:
         , myBias{}
         , myWeights{}
         , myOutput{}
+        , myError{}
     {
         // Throw exception if node count or the weight count is 0.
         if (0U == outputSize)
@@ -45,10 +46,11 @@ public:
         }
 
         // Initialize the matrices.
-        initMatrix(myOutput, outputSize);
-        initMatrix(myInputGradients, outputSize);
+        initMatrix(myInputGradients, inputSize);
         initMatrix(myBias, outputSize);
         initMatrix(myWeights, outputSize, inputSize);
+        initMatrix(myOutput, outputSize);
+        initMatrix(myError, outputSize);
 
         // Ignore activation function in this implementation.
         (void) (actFunc);
@@ -91,13 +93,6 @@ public:
     const Matrix1d& inputGradients() const noexcept override { return myInputGradients; }
 
     /**
-     * @brief Get the weights of the layer.
-     * 
-     * @return Matrix holding the weights of the layer.
-     */
-    const Matrix2d& weights() const noexcept override { return myWeights; }
-
-    /**
      * @brief Perform feedforward operation.
      * 
      * @param[in] input Matrix holding input data.
@@ -114,8 +109,6 @@ public:
     /**
      * @brief Perform backpropagation.
      * 
-     *        This method is appropriate for output layers only.
-     * 
      * @param[in] outputGradients Matrix holding gradients from the next layer.
      * 
      * @return True on success, false on failure.
@@ -125,22 +118,6 @@ public:
         // Return false if the output dimensions don't match.
         constexpr const char* opName{"backpropagation in output dense layer"};
         return matchDimensions(outputSize(), outputGradients.size(), opName);
-    }
-
-    /**
-     * @brief Perform backpropagation with the next layer.
-     * 
-     *        This method is appropriate for hidden layers only.
-     * 
-     * @param[in] nextLayer The next layer.
-     * 
-     * @return True on success, false on failure.
-     */
-    bool backpropagate(const Interface& nextLayer) noexcept override
-    {
-        // Return true if the layer dimensions match.
-        constexpr const char* opName{"backpropagation in hidden dense layer"};
-        return matchDimensions(outputSize(), nextLayer.inputSize(), opName);
     }
 
     /**
@@ -177,5 +154,8 @@ private:
 
     /** Output matrix. */
     Matrix1d myOutput;
+
+    /** Error values. */
+    Matrix1d myError;
 };
 } // namespace ml::dense_layer::stub

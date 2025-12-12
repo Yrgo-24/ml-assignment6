@@ -59,34 +59,6 @@ public:
     const Matrix1d& predict(const Matrix2d& input) noexcept override;
 
     /**
-     * @brief Get the output size of the last convolutional layer.
-     * 
-     *        Helps determine valid sizes for adding a new kernel or pool layer.
-     * 
-     * @return The output size of the last convolutional layer.
-     */
-    std::size_t convOutputSize() const noexcept;
-
-    /**
-     * @brief Add convolutional layer.
-     * 
-     *        The input size is automatically adjusted in accordance with the previous layer.
-     * 
-     * @param[in] kernelSize Kernel size. Must be smaller than the input size.
-     * @param[in] actFunc Activation function to use.
-     */
-    void addConvLayer(std::size_t kernelSize, act_func::Type actFunc);
-
-    /**
-     * @brief Add pooling layer.
-     * 
-     *        The input size is automatically adjusted in accordance with the previous layer.
-     * 
-     * @param[in] PoolSize Pool size. Must divide the input size.
-     */
-    void addPoolLayer(std::size_t poolSize);
-
-    /**
      * @brief Add dense layer.
      * 
      *        The input size is automatically adjusted in accordance with the previous layer.
@@ -118,6 +90,7 @@ public:
 private:
     const Matrix1d& output() const noexcept;
     const Matrix2d& convOutput() const noexcept;
+    std::size_t convOutputSize() const noexcept;
 
     bool feedforward(const Matrix2d& input) noexcept;
     bool backpropagate(const Matrix1d& output) noexcept;

@@ -18,6 +18,7 @@ Dense::Dense(const std::size_t inputSize, const std::size_t outputSize,
     , myBias{}
     , myWeights{}
     , myOutput{}
+    , myError{}
     , myActFunc{nullptr}
 {
     checkParameters(inputSize, outputSize);
@@ -40,9 +41,6 @@ const std::vector<double>& Dense::output() const noexcept { return myOutput; }
 const std::vector<double>& Dense::inputGradients() const noexcept { return myInputGradients; }
 
 // -----------------------------------------------------------------------------
-const std::vector<std::vector<double>>& Dense::weights() const noexcept { return myWeights; }
-
-// -----------------------------------------------------------------------------
 bool Dense::feedforward(const std::vector<double>& input) noexcept 
 {
     // Return false if the dimensions don't match.
@@ -52,7 +50,7 @@ bool Dense::feedforward(const std::vector<double>& input) noexcept
     // Perform feedforward for all nodes in the dense layer, use `i` as node ID.
     for (std::size_t i{}; i < outputSize(); ++i)
     {
-        // Calculate the sum as myBias[i] + myWeight[i][j] * input[j], use `j` as weight ID.
+        // Calculate the sum of the weights and the input values.
         double sum{myBias[i]};
 
         for (std::size_t j{}; j < inputSize(); ++j) 
@@ -60,7 +58,7 @@ bool Dense::feedforward(const std::vector<double>& input) noexcept
             sum += myWeights[i][j] * input[j];
         }
 
-        // Calculate myOutput[i] by applying the activation function to the sum.
+        // Calculate the output by applying the activation function to the sum.
         myOutput[i] = myActFunc->output(sum);
     }
     // Return true to indicate success.
@@ -80,34 +78,21 @@ bool Dense::backpropagate(const std::vector<double>& outputGradients) noexcept
         // Calculate the raw error.
         const double error{outputGradients[i] - myOutput[i]};
 
-        // Calculate input gradients by applying the activation function derivative to the output.
-        myInputGradients[i] = error * myActFunc->delta(myOutput[i]);
+        // Calculate error by applying the activation function derivative to the output.
+        myError[i] = error * myActFunc->delta(myOutput[i]);
     }
-    // Return true to indicate success.
-    return true;
-}
 
-// -----------------------------------------------------------------------------
-bool Dense::backpropagate(const Interface& nextLayer) noexcept 
-{
-    // Return false if the layer dimensions don't match.
-    constexpr const char* opName{"backpropagation in hidden dense layer"};
-    if (!matchDimensions(outputSize(), nextLayer.inputSize(), opName)) { return false; }
+    // Compute input gradients.
+    initMatrix(myInputGradients);
 
-    // Perform backpropagation for all nodes in this dense layer, use `i` as node ID.
-    for (std::size_t i{}; i < outputSize(); ++i)
+    for (std::size_t i{}; i < inputSize(); ++i)
     {
-        double error{0.0};
-
-        // Iterate through the next layer, use `j` as node ID.
-        for (std::size_t j{}; j < nextLayer.outputSize(); ++j)
+        for (std::size_t j{}; j < outputSize(); ++j)
         {
-            // Sum the weighted gradients from the next layer: inputGradients[j] * weight[j][i].
-            error += nextLayer.inputGradients()[j] * nextLayer.weights()[j][i];
+            myInputGradients[i] += myError[j] * myWeights[j][i];
         }
-        // Calculate myInputGradients[i] by applying the activation function derivative to the output.
-        myInputGradients[i] = error * myActFunc->delta(myOutput[i]);
     }
+
     // Return true to indicate success.
     return true;
 }
@@ -123,14 +108,14 @@ bool Dense::optimize(const std::vector<double>& input, const double learningRate
     // Perform optimization for all nodes in the dense layer, use `i` as node ID.
     for (std::size_t i{}; i < outputSize(); ++i)
     {
-        // Adjust myBias[i] with myInputGradients[i] * learningRate.
-        myBias[i] += myInputGradients[i] * learningRate;
+        // Adjust the bias with the calculated error and the learningRate.
+        myBias[i] += myError[i] * learningRate;
 
         // Use `j` as weight ID.
         for (std::size_t j{}; j < inputSize(); ++j)
         {      
-            // Adjust myWeights[i][j] with myInputGradients[i] * learningRate * input[j].
-            myWeights[i][j] += myInputGradients[i] * learningRate * input[j];
+            // Adjust the weights with the calculated error, the learningRate, and the input.
+            myWeights[i][j] += myError[i] * learningRate * input[j];
         }
     }
     // Return true to indicate success.
@@ -156,10 +141,11 @@ void Dense::initialize(const std::size_t inputSize, const std::size_t outputSize
                       const act_func::Type actFunc)
 {
     // Initialize the matrices.
-    initMatrix(myOutput, outputSize);
-    initMatrix(myInputGradients, outputSize);
+    initMatrix(myInputGradients, inputSize);
     initMatrix(myBias, outputSize);
     initMatrix(myWeights, outputSize, inputSize);
+    initMatrix(myOutput, outputSize);
+    initMatrix(myError, outputSize);
 
     // Fill the bias and weight matrices with random values.
     for (std::size_t i{}; i < outputSize; ++i)

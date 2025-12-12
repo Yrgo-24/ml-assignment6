@@ -56,27 +56,6 @@ const Matrix1d& Cnn::predict(const Matrix2d& input) noexcept
 }
 
 // -----------------------------------------------------------------------------
-std::size_t Cnn::convOutputSize() const noexcept
-{
-    const std::size_t last{myConvLayers.size() - 1U};
-    return myConvLayers[last]->outputSize();
-}
-
-// -----------------------------------------------------------------------------
-void Cnn::addConvLayer(const std::size_t kernelSize, const act_func::Type actFunc)
-{
-    myConvLayers.emplace_back(myFactory.convLayer(convOutputSize(), kernelSize, actFunc));
-    myFlattenLayer = myFactory.flattenLayer(convOutputSize());
-}
-
-// -----------------------------------------------------------------------------
-void Cnn::addPoolLayer(const std::size_t poolSize)
-{
-    myConvLayers.emplace_back(myFactory.maxPoolLayer(convOutputSize(), poolSize));
-    myFlattenLayer = myFactory.flattenLayer(convOutputSize());
-}
-
-// -----------------------------------------------------------------------------
 void Cnn::addDenseLayer(const std::size_t outputSize, const act_func::Type actFunc)
 {
     myDenseLayers.emplace_back(myFactory.denseLayer(this->outputSize(), outputSize, actFunc));
@@ -139,6 +118,13 @@ const Matrix2d& Cnn::convOutput() const noexcept
 }
 
 // -----------------------------------------------------------------------------
+std::size_t Cnn::convOutputSize() const noexcept
+{
+    const std::size_t last{myConvLayers.size() - 1U};
+    return myConvLayers[last]->outputSize();
+}
+
+// -----------------------------------------------------------------------------
 bool Cnn::feedforward(const Matrix2d& input) noexcept
 {
     bool success{true};
@@ -187,7 +173,7 @@ bool Cnn::backpropagate(const Matrix1d& output) noexcept
         
         for (std::size_t i{last}; i > 0U; --i)
         {
-            success &= myDenseLayers[i - 1U]->backpropagate(*myDenseLayers[i]);
+            success &= myDenseLayers[i - 1U]->backpropagate(myDenseLayers[i]->inputGradients());
         }
         if (!success) { return false; }
     }

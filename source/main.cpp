@@ -53,25 +53,27 @@ void predictAndPrint(ml::cnn::Interface& cnn, const ml::Matrix3d& inputs) noexce
 int main()
 {
     // CNN parameters.
-    constexpr std::size_t inputSize{3U};
+    constexpr std::size_t inputSize{4U};
     constexpr std::size_t kernelSize{2U};
     constexpr ml::act_func::Type convFunc{ml::act_func::Type::Relu};
-    constexpr std::size_t poolSize{3U};
+    constexpr std::size_t poolSize{2U};
     constexpr std::size_t denseOutput{1U};
     constexpr ml::act_func::Type denseFunc{ml::act_func::Type::Tanh};
 
     // Training parameters.
-    constexpr std::size_t epochCount{10000U};
+    constexpr std::size_t epochCount{20000U};
     constexpr double learningRate{0.01};
 
     // Input data for training (digits 0 - 1).
     const ml::Matrix3d inputs{
-        {{1, 1, 1},
-         {1, 0, 1},
-         {1, 1, 1}},
-        {{0, 1, 0},
-         {0, 1, 0},
-         {0, 1, 0}},
+        {{1, 1, 1, 1},
+         {1, 0, 0, 1},
+         {1, 0, 0, 1},
+         {1, 1, 1, 1}},
+        {{0, 1, 0, 0},
+         {0, 1, 0, 0},
+         {0, 1, 0, 0},
+         {0, 1, 0, 0}},
     };
     // Output data for training (the corresponding numbers).
     const ml::Matrix2d outputs{{0}, {1}};

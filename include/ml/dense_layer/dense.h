@@ -61,13 +61,6 @@ public:
     const Matrix1d& inputGradients() const noexcept override;
 
     /**
-     * @brief Get the weights of the layer.
-     * 
-     * @return Matrix holding the weights of the layer.
-     */
-    const Matrix2d& weights() const noexcept override;
-
-    /**
      * @brief Perform feedforward operation.
      * 
      * @param[in] input Matrix holding input data.
@@ -79,24 +72,11 @@ public:
     /**
      * @brief Perform backpropagation.
      * 
-     *        This method is appropriate for output layers only.
-     * 
      * @param[in] outputGradients Matrix holding gradients from the next layer.
      * 
      * @return True on success, false on failure.
      */
     bool backpropagate(const Matrix1d& outputGradients) noexcept override;
-
-    /**
-     * @brief Perform backpropagation with the next layer.
-     * 
-     *        This method is appropriate for hidden layers only.
-     * 
-     * @param[in] nextLayer The next layer.
-     * 
-     * @return True on success, false on failure.
-     */
-    bool backpropagate(const Interface& nextLayer) noexcept override;
 
     /**
      * @brief Perform optimization.
@@ -129,6 +109,9 @@ private:
 
     /** Output matrix. */
     Matrix1d myOutput;
+
+    /** Error values. */
+    Matrix1d myError;
 
     /** Activation function. */
     ActFuncPtr myActFunc;
