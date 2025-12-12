@@ -2,6 +2,41 @@
 
 Konvolutionellt neuralt nätverk (CNN) med utbytbara stubklasser. När stubbarna ersatts med riktiga implementationer kan nätverket tränas att känna igen och prediktera siffrorna 0 och 1 utifrån enkla tvådimensionella bilder.
 
+Nätverket består utav:
+* Ett konvolutionellt lager, som bearbetar 3x3-bilder med en 2x2-kernel.
+* Ett 3x3 maxpooling-lager, som samplar ned bilden till 1x1.
+* Ett flatten-lager, som plattar bilden till en dimension.
+* Ett dense-lager, som genomför själva prediktionen.
+
+Dense-lagret är redan implementerat, men de konvolutionella lagren måste implementeras innan nätverket
+fungerar som tänkt.
+
+När samtliga lager har blivit implementerade bör utdatan se ut såhär:
+
+```bash
+--------------------------------------------------------------------------------
+Input:
+[[1.0, 1.0, 1.0],
+[1.0, 0.0, 1.0],
+[1.0, 1.0, 1.0]]
+
+Prediction:
+[0.0]
+
+Input:
+[[0.0, 1.0, 0.0],
+[0.0, 1.0, 0.0],
+[0.0, 1.0, 0.0]]
+
+Prediction:
+[1.0]
+--------------------------------------------------------------------------------
+```
+
+Designmönstret `factory pattern` används för att skapa de olika lagren i nätverket på ett flexibelt och utbyggbart sätt.
+Smarta pekare i form av `std::unique_ptr` används för att hantera minne på ett säkert och modernt sätt, där risken för
+minnesläckor minimeras.
+
 ## Kompilering samt körning av programmet
 För att kunna kompilera koden, se till att du har `build-essential` installerat:
 
