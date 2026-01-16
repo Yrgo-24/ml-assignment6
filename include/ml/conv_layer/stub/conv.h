@@ -26,7 +26,7 @@ public:
      * 
      * @param[in] inputSize Input size. Must be greater than 0.
      * @param[in] kernelSize Kernel size. Must be greater than 0 and smaller than the input size.
-     * @param[in] actFunc Activation function to use (default = 0).
+     * @param[in] actFunc Activation function to use (default = none).
      */
     explicit Conv(const std::size_t inputSize, const std::size_t kernelSize, 
                   const act_func::Type actFunc = act_func::Type::None)
@@ -34,7 +34,7 @@ public:
         , myKernel{}
         , myOutput{}
     {
-        // Throw exception if the kernel size is outside range [1, 11] or larger then the input size.
+        // Throw exception if the kernel size is outside range [1, 11] or larger than the input size.
         if ((kMinKernelSize > kernelSize) || (kMaxKernelSize < kernelSize))
         {
             std::stringstream msg{};
