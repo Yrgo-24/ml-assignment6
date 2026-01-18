@@ -65,13 +65,16 @@ void Cnn::addDenseLayer(const std::size_t outputSize, const act_func::Type actFu
 bool Cnn::train(const Matrix3d& trainIn, const Matrix2d& trainOut, const std::size_t epochCount,
                 const double learningRate)
 {
-    if (0.0 >= learningRate)
+    // Check the input arguments, return false on failure.
+    if ((0.0 >= learningRate) || (1.0 < learningRate))
     {
-        std::cerr << "Failed to train CNN: invalid learning rate " << learningRate << "!\n";   
+        std::cerr << "Failed to train CNN: invalid learning rate " << learningRate << "!\n";
+        return false;   
     }
     else if (0U == epochCount)
     {
-        std::cerr << "Failed to train CNN: invalid epoch count " << epochCount << "!\n";   
+        std::cerr << "Failed to train CNN: invalid epoch count " << epochCount << "!\n";
+        return false;  
     }
 
     const std::size_t setCount{std::min(trainIn.size(), trainOut.size())};
@@ -79,6 +82,7 @@ bool Cnn::train(const Matrix3d& trainIn, const Matrix2d& trainOut, const std::si
     if (0U == setCount)
     {
         std::cerr << "Failed to train CNN: invalid set count " << setCount << "!\n";
+        return false;
     }
 
     // Create a training order list.
@@ -90,7 +94,7 @@ bool Cnn::train(const Matrix3d& trainIn, const Matrix2d& trainOut, const std::si
         // Shuffle the training order list at the start of each epoch.
         shuffleTrainOrderList(trainOrder);
 
-        // Iterate through the training sets.
+        // Iterate through the training sets, return false on failure.
         for (auto& j : trainOrder)
         {
             const Matrix2d& input{trainIn[j]};
@@ -100,6 +104,7 @@ bool Cnn::train(const Matrix3d& trainIn, const Matrix2d& trainOut, const std::si
             if (!success) { return false; }
         }
     }
+    // Return true on success.
     return true;
 }
 

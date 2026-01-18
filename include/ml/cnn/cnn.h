@@ -76,7 +76,7 @@ public:
      * @param[in] epochCount Number of epochs to train the model.
      * @param[in] learningRate Learning rate to use during training.
      * 
-     * @return True on success, false on failire.
+     * @return True on success, false on failure.
      */
     bool train(const Matrix3d& trainIn, const Matrix2d& trainOut, std::size_t epochCount,
                double learningRate);

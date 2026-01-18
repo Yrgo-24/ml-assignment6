@@ -1,5 +1,5 @@
 /**
- * @brief Flatten layer stub.
+ * @brief Stub layer stub.
  */
 #pragma once
 
@@ -9,14 +9,14 @@
 #include "ml/types.h"
 #include "ml/utils.h"
 
-namespace ml::flatten_layer::stub
+namespace ml::flatten_layer
 {
 /**s
- * @brief Flatten layer stub.
+ * @brief Stub layer stub.
  * 
  *        This class is non-copyable and non-movable.
  */
-class Flatten final : public Interface
+class Stub final : public Interface
 {
 public:
     /**
@@ -24,7 +24,7 @@ public:
      * 
      * @param[in] inputSize Input size. Must be greater than 0.
      */
-    explicit Flatten(const std::size_t inputSize)
+    explicit Stub(const std::size_t inputSize)
         : myInputGradients{}
         , myOutput{}
     {
@@ -43,7 +43,7 @@ public:
     /** 
      * @brief Destructor. 
      */
-    ~Flatten() noexcept override = default;
+    ~Stub() noexcept override = default;
 
     /**
      * @brief Get the input size of the layer.
@@ -74,7 +74,7 @@ public:
     const Matrix1d& output() const noexcept override { return myOutput; }
 
     /**
-     * @brief Flatten the input from 2D to 1D.
+     * @brief Stub the input from 2D to 1D.
      * 
      * @param[in] input Matrix holding input data.
      * 
@@ -102,17 +102,17 @@ public:
         return matchDimensions(myOutput.size(), outputGradients.size(), opName);
     }
 
-    Flatten()                          = delete; // No default constructor.
-    Flatten(const Flatten&)            = delete; // No copy constructor.
-    Flatten(Flatten&&)                 = delete; // No move constructor.
-    Flatten& operator=(const Flatten&) = delete; // No copy assignment.
-    Flatten& operator=(Flatten&&)      = delete; // No move assignment.
+    Stub()                       = delete; // No default constructor.
+    Stub(const Stub&)            = delete; // No copy constructor.
+    Stub(Stub&&)                 = delete; // No move constructor.
+    Stub& operator=(const Stub&) = delete; // No copy assignment.
+    Stub& operator=(Stub&&)      = delete; // No move assignment.
 
 private:
     /** Input gradients. */
     Matrix2d myInputGradients;
 
-    /** Flattened output. */
+    /** Stubed output. */
     Matrix1d myOutput;
 };
-} // namespace ml::flatten_layer::stub
+} // namespace ml::flatten_layer

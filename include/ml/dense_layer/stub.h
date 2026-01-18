@@ -10,14 +10,14 @@
 #include "ml/types.h"
 #include "ml/utils.h"
 
-namespace ml::dense_layer::stub
+namespace ml::dense_layer
 {
 /**
  * @brief Dense layer stub.
  * 
  *        This class is non-copyable and non-movable.
  */
-class Dense final : public Interface
+class Stub final : public Interface
 {
 public:
     /**
@@ -27,7 +27,7 @@ public:
      * @param[in] outputSize Output size.
      * @param[in] actFunc Activation function to use for this layer (default = ReLU).
      */
-    explicit Dense(const std::size_t inputSize, const std::size_t outputSize, 
+    explicit Stub(const std::size_t inputSize, const std::size_t outputSize, 
                    const act_func::Type actFunc = act_func::Type::Relu)
         : myInputGradients{}
         , myBias{}
@@ -59,7 +59,7 @@ public:
     /**
      * @brief Destructor.
      */
-    ~Dense() noexcept override = default;
+    ~Stub() noexcept override = default;
 
     /**
      * @brief Get the input size of the layer.
@@ -136,11 +136,11 @@ public:
             && checkLearningRate(learningRate, opName);
     }
 
-    Dense()                        = delete; // No default constructor.
-    Dense(const Dense&)            = delete; // No copy constructor.
-    Dense(Dense&&)                 = delete; // No move constructor.
-    Dense& operator=(const Dense&) = delete; // No copy assignment.
-    Dense& operator=(Dense&&)      = delete; // No move assignment.
+    Stub()                       = delete; // No default constructor.
+    Stub(const Stub&)            = delete; // No copy constructor.
+    Stub(Stub&&)                 = delete; // No move constructor.
+    Stub& operator=(const Stub&) = delete; // No copy assignment.
+    Stub& operator=(Stub&&)      = delete; // No move assignment.
 
 private:
     /** Input gradients. */
@@ -158,4 +158,4 @@ private:
     /** Error values. */
     Matrix1d myError;
 };
-} // namespace ml::dense_layer::stub
+} // namespace ml::dense_layer

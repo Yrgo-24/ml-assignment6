@@ -10,7 +10,7 @@
 #include "ml/conv_layer/max_pool.h"
 #include "ml/dense_layer/dense.h"
 #include "ml/factory/factory.h"
-#include "ml/factory/stub/factory.h"
+#include "ml/factory/stub.h"
 #include "ml/flatten_layer/flatten.h"
 
 namespace ml::factory
@@ -34,8 +34,8 @@ ActFuncPtr Factory::actFunc(const act_func::Type type)
 ConvLayerPtr Factory::convLayer(const std::size_t inputSize, const std::size_t kernelSize, 
                              const act_func::Type actFunc) 
 {
-    ///! @todo Replace conv_layer::stub::Conv with conv_layer::Conv when implemented.
-    return std::make_unique<conv_layer::stub::Conv>(inputSize, kernelSize, actFunc);
+    ///! @todo Replace conv_layer::ConvStub with conv_layer::Conv when implemented.
+    return std::make_unique<conv_layer::ConvStub>(inputSize, kernelSize, actFunc);
 }
 
 // -----------------------------------------------------------------------------
@@ -48,21 +48,21 @@ DenseLayerPtr Factory::denseLayer(const std::size_t inputSize, const std::size_t
 // -----------------------------------------------------------------------------
 FlattenLayerPtr Factory::flattenLayer(const std::size_t inputSize) 
 {
-    ///! @todo Replace flatten_layer::stub::Flatten with flatten_layer::Flatten when implemented.
-    return std::make_unique<flatten_layer::stub::Flatten>(inputSize);
+    ///! @todo Replace flatten_layer::Stub with flatten_layer::Flatten when implemented.
+    return std::make_unique<flatten_layer::Stub>(inputSize);
 }
 
 // -----------------------------------------------------------------------------
 ConvLayerPtr Factory::maxPoolLayer(const std::size_t inputSize, const std::size_t poolSize)
 {
-    ///! @todo Replace conv_layer::stub::MaxPool with conv_layer::MaxPool when implemented.
-    return std::make_unique<conv_layer::stub::MaxPool>(inputSize, poolSize);
+    ///! @todo Replace conv_layer::MaxPoolStub with conv_layer::MaxPool when implemented.
+    return std::make_unique<conv_layer::MaxPoolStub>(inputSize, poolSize);
 }
 
 // -----------------------------------------------------------------------------
 FactoryPtr create(const bool stub)
 {
-    if (stub) { return std::make_unique<stub::Factory>(); }
+    if (stub) { return std::make_unique<Stub>(); }
     return std::make_unique<Factory>();
 }
 } // namespace ml::factory

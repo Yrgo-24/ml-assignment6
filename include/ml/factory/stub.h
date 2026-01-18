@@ -6,31 +6,30 @@
 #include <memory>
 
 #include "ml/act_func/none.h"
-#include "ml/conv_layer/stub/conv.h"
-#include "ml/conv_layer/stub/max_pool.h"
-#include "ml/dense_layer/stub/dense.h"
+#include "ml/conv_layer/stub.h"
+#include "ml/dense_layer/stub.h"
 #include "ml/factory/interface.h"
-#include "ml/flatten_layer/stub/flatten.h"
+#include "ml/flatten_layer/stub.h"
 
-namespace ml::factory::stub
+namespace ml::factory
 {
 /**
  * @brief Machine learning factory stub.
  * 
  *        This class is non-copyable and non-movable.
  */
-class Factory final : public Interface
+class Stub final : public Interface
 {
 public:
     /** 
      * @brief Constructor. 
      */
-    Factory() noexcept = default;
+    Stub() noexcept = default;
 
     /**
      * @brief Destructor.
      */
-    ~Factory() noexcept override = default;
+    ~Stub() noexcept override = default;
 
     /**
      * @brief Create an activation function.
@@ -57,14 +56,14 @@ public:
     ConvLayerPtr convLayer(const std::size_t inputSize, const std::size_t kernelSize, 
                            const act_func::Type actFunc) override
     {
-        return std::make_unique<conv_layer::stub::Conv>(inputSize, kernelSize, actFunc);
+        return std::make_unique<conv_layer::ConvStub>(inputSize, kernelSize, actFunc);
     }
 
     /**
      * @brief Create a dense layer.
      * 
      * @param[in] inputSize Input size. Must be greater than 0.
-     * @param[in] kernelSize Output size. Must be greater than 0.
+     * @param[in] outputSize Output size. Must be greater than 0.
      * @param[in] actFunc Activation function to use.
      * 
      * @return Pointer to the new dense layer.
@@ -72,17 +71,19 @@ public:
     DenseLayerPtr denseLayer(const std::size_t inputSize, const std::size_t outputSize, 
                              const act_func::Type actFunc) override
     {
-        return std::make_unique<dense_layer::stub::Dense>(inputSize, outputSize, actFunc);
+        return std::make_unique<dense_layer::Stub>(inputSize, outputSize, actFunc);
     }
 
     /**
      * @brief Create a flatten layer.
      * 
      * @param[in] inputSize Input size. Must be greater than 0.
+     * 
+     * @return Pointer to the new flatten layer.
      */
     FlattenLayerPtr flattenLayer(const std::size_t inputSize) override
     {
-        return std::make_unique<flatten_layer::stub::Flatten>(inputSize);
+        return std::make_unique<flatten_layer::Stub>(inputSize);
     }
 
     /**
@@ -95,12 +96,12 @@ public:
      */
     ConvLayerPtr maxPoolLayer(const std::size_t inputSize, const std::size_t poolSize) override
     {
-        return std::make_unique<conv_layer::stub::MaxPool>(inputSize, poolSize);
+        return std::make_unique<conv_layer::MaxPoolStub>(inputSize, poolSize);
     }
 
-    Factory(const Factory&)            = delete; // No copy constructor.
-    Factory(Factory&&)                 = delete; // No move constructor.
-    Factory& operator=(const Factory&) = delete; // No copy assignment.
-    Factory& operator=(Factory&&)      = delete; // No move assignment.
+    Stub(const Stub&)            = delete; // No copy constructor.
+    Stub(Stub&&)                 = delete; // No move constructor.
+    Stub& operator=(const Stub&) = delete; // No copy assignment.
+    Stub& operator=(Stub&&)      = delete; // No move assignment.
 };
-} // namespace ml::factory::stub
+} // namespace ml::factory

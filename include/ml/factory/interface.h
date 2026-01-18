@@ -48,7 +48,7 @@ public:
      * @brief Create a dense layer.
      * 
      * @param[in] inputSize Input size. Must be greater than 0.
-     * @param[in] kernelSize Output size. Must be greater than 0.
+     * @param[in] outputSize Output size. Must be greater than 0.
      * @param[in] actFunc Activation function to use.
      * 
      * @return Pointer to the new dense layer.
@@ -60,6 +60,8 @@ public:
      * @brief Create a flatten layer.
      * 
      * @param[in] inputSize Input size. Must be greater than 0.
+     * 
+     * @return Pointer to the new flatten layer.
      */
     virtual FlattenLayerPtr flattenLayer(std::size_t inputSize) = 0;
 
