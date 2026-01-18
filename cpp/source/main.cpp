@@ -25,7 +25,7 @@ void predictAndPrint(ml::cnn::Interface& cnn, const ml::Matrix3d& inputs) noexce
 {
     // Terminate function if no input sets are available.
     if (inputs.empty()) { return; }
-    const auto* last{&inputs[inputs.size() -1U]};
+    const auto* last{&inputs[inputs.size() - 1U]};
 
     std::cout << "--------------------------------------------------------------------------------\n";
 
