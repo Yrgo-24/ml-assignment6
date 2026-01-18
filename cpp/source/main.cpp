@@ -46,7 +46,7 @@ void predictAndPrint(ml::cnn::Interface& cnn, const ml::Matrix3d& inputs) noexce
 } // namespace
 
 /**
- * @brief reate and train a CNN (Convolutional Neural Network). Print predictions on success.
+ * @brief Create and train a CNN (Convolutional Neural Network). Print predictions on success.
  * 
  * @return 0 on success, error code -1 on failure.
  */
